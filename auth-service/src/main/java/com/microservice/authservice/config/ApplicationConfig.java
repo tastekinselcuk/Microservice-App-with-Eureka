@@ -16,9 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.microservice.authservice.repository.UserRepository;
 
-
-
-
 /**
  * This class is used to configure general application settings, such as user authentication, for use in our program.
  */
