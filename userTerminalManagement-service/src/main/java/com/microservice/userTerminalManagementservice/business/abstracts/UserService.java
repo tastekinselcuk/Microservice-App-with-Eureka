@@ -2,7 +2,7 @@ package com.microservice.userTerminalManagementservice.business.abstracts;
 
 import java.util.List;
 
-import com.microservice.userTerminalManagementservice.domain.users.User;
+import com.microservice.userTerminalManagementservice.domain.user.User;
 import com.microservice.userTerminalManagementservice.dto.UserDTO;
 
 public interface UserService {

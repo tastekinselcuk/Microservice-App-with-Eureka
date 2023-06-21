@@ -2,7 +2,7 @@ package com.microservice.userTerminalManagementservice.dto;
 
 import java.util.List;
 
-import com.microservice.userTerminalManagementservice.enums.Role;
+import com.microservice.userTerminalManagementservice.domain.user.Role;
 
 import lombok.*;
 
@@ -16,7 +16,5 @@ public class UserDTO {
     private String lastname;
     private String email;
     private List<Role> roles;
-
-
 
 }

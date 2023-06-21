@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.microservice.carDefectservice.domain.users.User;
+import com.microservice.carDefectservice.domain.user.User;
 import com.microservice.carDefectservice.dto.UserDTO;
 import com.microservice.carDefectservice.exception.AppException;
 import com.microservice.carDefectservice.repository.UserRepository;

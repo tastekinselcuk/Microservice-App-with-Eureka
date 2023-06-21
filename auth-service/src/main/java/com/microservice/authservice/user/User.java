@@ -3,14 +3,18 @@ package com.microservice.authservice.user;
 import com.microservice.authservice.token.Token;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +24,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
@@ -46,8 +51,10 @@ public class User implements UserDetails {
   @Column(nullable = false)
   private String password;
 
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
-  private Role role;
+  @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+  private List<Role> roles;
   
   @Column(name = "is_deleted", nullable = false)
   private Boolean deleted = false;
@@ -57,9 +64,12 @@ public class User implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return role.getAuthorities();
+      List<GrantedAuthority> authorities = new ArrayList<>();
+      for (Role r : roles) {
+          authorities.add(new SimpleGrantedAuthority(r.name()));
+      }
+      return authorities;
   }
-
   @Override
   public String getPassword() {
     return password;

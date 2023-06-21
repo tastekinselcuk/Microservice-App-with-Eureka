@@ -1,5 +1,7 @@
 package com.microservice.authservice.auth;
 
+import java.util.List;
+
 import com.microservice.authservice.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +18,5 @@ public class RegisterRequest {
   private String lastname;
   private String email;
   private String password;
-  private Role role;
+  private List<Role> roles;
 }

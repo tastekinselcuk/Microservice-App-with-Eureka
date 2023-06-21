@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import com.microservice.userTerminalManagementservice.business.abstracts.UserService;
-import com.microservice.userTerminalManagementservice.domain.users.User;
+import com.microservice.userTerminalManagementservice.domain.user.User;
 
 /**
  * Rest API for managing users.

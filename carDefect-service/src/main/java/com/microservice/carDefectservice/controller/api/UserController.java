@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.microservice.carDefectservice.business.abstracts.UserService;
-import com.microservice.carDefectservice.domain.users.User;
+import com.microservice.carDefectservice.domain.user.User;
 import com.microservice.carDefectservice.dto.UserDTO;
 import jakarta.validation.Valid;
 

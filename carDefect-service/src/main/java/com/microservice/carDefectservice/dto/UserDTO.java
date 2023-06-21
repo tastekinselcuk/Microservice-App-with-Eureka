@@ -2,7 +2,7 @@ package com.microservice.carDefectservice.dto;
 
 import java.util.List;
 
-import com.microservice.carDefectservice.enums.Role;
+import com.microservice.carDefectservice.domain.user.Role;
 import lombok.*;
 
 @Data
@@ -15,7 +15,5 @@ public class UserDTO {
     private String lastname;
     private String email;
     private List<Role> roles;
-
-
 
 }

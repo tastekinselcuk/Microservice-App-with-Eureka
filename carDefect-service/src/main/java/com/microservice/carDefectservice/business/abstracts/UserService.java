@@ -2,7 +2,7 @@ package com.microservice.carDefectservice.business.abstracts;
 
 import java.util.List;
 
-import com.microservice.carDefectservice.domain.users.User;
+import com.microservice.carDefectservice.domain.user.User;
 import com.microservice.carDefectservice.dto.UserDTO;
 
 
