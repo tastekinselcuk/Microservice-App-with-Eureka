@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +15,16 @@ import com.microservice.carDefectservice.dto.CarDTO;
 import com.microservice.carDefectservice.exception.AppException;
 import com.microservice.carDefectservice.repository.CarRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * This class implements the CarService interface and provides methods for managing cars in the system.
  */
+@RequiredArgsConstructor
 @Service
 public class CarManager implements CarService{
 	
-	@Autowired
-	private CarRepository carRepository;
+	private final CarRepository carRepository;
 
 
     /**

@@ -16,15 +16,17 @@ import com.microservice.carDefectservice.dto.DefectDTO;
 import com.microservice.carDefectservice.exception.AppException;
 import com.microservice.carDefectservice.repository.DefectRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 /**
  * This class implements the DefectService interface and provides methods for managing defects in the system.
  */
+@RequiredArgsConstructor
 @Service
 public class DefectManager implements DefectService {
 	
 	@Autowired
-	private DefectRepository defectRepository;
+	private final DefectRepository defectRepository;
 
 	/**
 	 * Returns a list of all defects in the system.

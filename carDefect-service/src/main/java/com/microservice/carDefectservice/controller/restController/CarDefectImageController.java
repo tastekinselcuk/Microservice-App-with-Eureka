@@ -9,7 +9,6 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservice.carDefectservice.domain.Defect;
 import com.microservice.carDefectservice.repository.DefectRepository;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/carDefectImage")
 public class CarDefectImageController {
 	
-    @Autowired
-    private DefectRepository defectRepository;
+    private final DefectRepository defectRepository;
 	
 	@GetMapping("/createImage/{carId}")
-    @PreAuthorize("hasRole('TEAMLEAD')")
+    @PreAuthorize("hasAuthority('teamlead:read')")
 	public void createImage () {
 		
 		
@@ -37,7 +38,7 @@ public class CarDefectImageController {
 
 
     @GetMapping("/car-defects/{carId}")
-    @PreAuthorize("hasRole('TEAMLEAD')")
+    @PreAuthorize("hasAuthority('teamlead:read')")
     public ResponseEntity<byte[]> getCarDefectById(@PathVariable Integer carId) throws IOException {
         // Load the OpenCV core library
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);

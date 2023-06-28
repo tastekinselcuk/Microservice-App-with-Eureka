@@ -1,6 +1,5 @@
 package com.microservice.carDefectservice.controller.restController;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,22 +9,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.carDefectservice.business.abstracts.CarDefectService;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 /**
  * The REST controller class that handles HTTP requests related to car defects.
  */
+@RequiredArgsConstructor
 @Log4j2
 @RestController
 @RequestMapping("/api/carDefect")
 public class CarDefectController {
 	
-	private CarDefectService carDefectService;
+	private final CarDefectService carDefectService;
 
-	@Autowired
-	public CarDefectController(CarDefectService carDefectService) {
-		this.carDefectService = carDefectService;
-	}
 
     /**
      * HTTP POST request that saves a car defect report.
@@ -42,7 +40,7 @@ public class CarDefectController {
      * HTTP status 500 (INTERNAL_SERVER_ERROR) if there is an error
      */
     @PostMapping("/save")
-    @PreAuthorize("hasRole('OPERATOR')")
+    @PreAuthorize("hasAuthority('operator:create')")
     public ResponseEntity<?> saveCarDefect(@RequestParam(required = true) int carId,
 			   @RequestParam(required = true) String defectPartCategory,
                @RequestParam(required = true) String defectPartName,

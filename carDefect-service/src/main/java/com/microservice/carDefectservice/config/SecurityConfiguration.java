@@ -1,6 +1,7 @@
 package com.microservice.carDefectservice.config;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,10 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import com.microservice.carDefectservice.security.config.JwtAuthenticationFilter;
-
-import static com.microservice.carDefectservice.domain.user.Role.ADMIN;
-import static com.microservice.carDefectservice.domain.user.Role.TEAMLEAD;
-import static com.microservice.carDefectservice.domain.user.Role.OPERATOR;
 
 
 //Configuration for HTTP requests and roles
@@ -42,19 +39,7 @@ public class SecurityConfiguration {
         //AuthService Access
         .authorizeHttpRequests()
     	.requestMatchers("/api/auth/**").permitAll()
-    	//CarDefectService Access
-    	.requestMatchers("/api/carDefect/save").hasAnyAuthority(OPERATOR.name())
-    	.requestMatchers("/api/carDefectImage/**").hasAnyRole(TEAMLEAD.name())
-    	.requestMatchers("/api/page/**").hasAnyRole(TEAMLEAD.name())
-        //ManagementService Access
-    	.requestMatchers("/api/terminal/manager/**").hasAnyRole(ADMIN.name())
-    	.requestMatchers("/api/user/manager/**").hasAnyRole(ADMIN.name())
-        //Api
-    	.requestMatchers("/api/users/**").hasAnyRole(ADMIN.name())
-    	.requestMatchers("/api/car/**").hasAnyRole(ADMIN.name())
-    	.requestMatchers("/api/defect/**").hasAnyRole(ADMIN.name(), TEAMLEAD.name())
-    	.requestMatchers("/api/terminals/**").hasAnyRole(ADMIN.name(), TEAMLEAD.name())
-        .requestMatchers("/api/**").authenticated()
+
 
         
         .anyRequest()

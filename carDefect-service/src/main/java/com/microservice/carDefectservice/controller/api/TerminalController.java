@@ -2,7 +2,6 @@ package com.microservice.carDefectservice.controller.api;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,15 +18,17 @@ import com.microservice.carDefectservice.business.abstracts.TerminalService;
 import com.microservice.carDefectservice.domain.Terminal;
 import com.microservice.carDefectservice.dto.TerminalDTO;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Rest API for managing terminals.
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/terminals")
 public class TerminalController {
 	
-	@Autowired
-	private TerminalService terminalService;
+	private final TerminalService terminalService;
 
 	/**
 	 * Returns a list of all terminals.
@@ -35,7 +36,7 @@ public class TerminalController {
 	 * @return a List of all terminals
 	 */
     @GetMapping("/getAllTerminals")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:read')")
     public List<Terminal> getAllTerminals() {
     	return this.terminalService.getAllTerminals();
     }
@@ -46,7 +47,7 @@ public class TerminalController {
 	 * @return a List of all terminals as TerminalDTOs
 	 */
     @GetMapping("/getAllTerminalDtos")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public List<TerminalDTO> getAllTerminalDtos() {
     	return this.terminalService.getAllTerminalDtos();
     }
@@ -58,7 +59,7 @@ public class TerminalController {
 	 * @return a ResponseEntity containing a success message.
 	 */
     @PostMapping("/save")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String> saveTerminal(@RequestBody Terminal terminal){
     	
 		terminalService.saveTerminal(terminal);
@@ -73,7 +74,7 @@ public class TerminalController {
      * @return A ResponseEntity containing a success message.
     */
     @PutMapping("/changeTerminalStatus/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> changeTerminalStatus(@PathVariable Integer id) {
     	
         terminalService.changeTerminalStatus(id);

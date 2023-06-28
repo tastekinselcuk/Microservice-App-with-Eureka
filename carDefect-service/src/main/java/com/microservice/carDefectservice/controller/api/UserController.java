@@ -2,7 +2,6 @@ package com.microservice.carDefectservice.controller.api;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,17 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservice.carDefectservice.business.abstracts.UserService;
 import com.microservice.carDefectservice.domain.user.User;
 import com.microservice.carDefectservice.dto.UserDTO;
+
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Rest API for managing users.
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-	@Autowired
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Returns a list of all users.
@@ -36,7 +37,7 @@ public class UserController {
      * @return a ResponseEntity containing a list of all users
      */
     @GetMapping("/getAllUsers")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:read')")
     public List<User> getAllUsers() {
     	return this.userService.getAllUsers();
     }
@@ -47,7 +48,7 @@ public class UserController {
      * @return a ResponseEntity containing a list of all users as UserDTOs
      */
     @GetMapping("/getAllUserDtos")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public List<UserDTO> getAllUserDtos() {
     	return this.userService.getAllUserDtos();
     }
@@ -59,7 +60,7 @@ public class UserController {
      * @return a ResponseEntity containing the user with the given ID.
      */
     @GetMapping("/getUserDtoById/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public ResponseEntity<?> getUserDtoById(@PathVariable Integer id) {
 
         return new ResponseEntity<>(userService.getUserDtoById(id), HttpStatus.OK);
@@ -75,7 +76,7 @@ public class UserController {
      * @return a ResponseEntity containing a success message.
      */
     @PostMapping("/saveUser")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String> saveUser(@Valid @RequestBody User user) {
         userService.saveUser(user);
         String message = String.format("User '%s' saved successfully.", user.getEmail());
@@ -91,7 +92,7 @@ public class UserController {
      * @return a ResponseEntity containing a success message.
      */
     @PutMapping("/updateUser/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.checkUserId(authentication,#id)")
+    @PreAuthorize("hasAuthority('admin:update') or @userSecurity.checkUserId(authentication,#id)")
     public ResponseEntity<String> updateUser(@PathVariable Integer id, @Valid @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
         String message = String.format("User with id '%s' updated successfully.", updatedUser.getId());
@@ -107,7 +108,7 @@ public class UserController {
      * @return a ResponseEntity containing a success message.
      */
     @PutMapping("/changeUserPassword/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.checkUserId(authentication,#id)")
+    @PreAuthorize("hasAuthority('admin:update') or @userSecurity.checkUserId(authentication,#id)")
     public ResponseEntity<String> changeUserPassword(@PathVariable Integer id, @RequestBody String password) {
         userService.changeUserPassword(id, password);
         String message = String.format("Password changed successfully for user with id '%s'.", id);
@@ -123,7 +124,7 @@ public class UserController {
      * @return a ResponseEntity containing a success message
      */
     @PutMapping("/softDeleteUser/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @userSecurity.checkUserId(authentication,#id)")
+    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> softDeleteUser(@PathVariable Integer id) {
 
     	userService.softDeleteUser(id);

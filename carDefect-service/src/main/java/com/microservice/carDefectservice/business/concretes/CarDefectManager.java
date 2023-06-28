@@ -12,7 +12,6 @@ import org.opencv.core.Scalar;
 import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -31,6 +30,8 @@ import com.microservice.carDefectservice.repository.DefectRepository;
 import com.microservice.carDefectservice.repository.LocationRepository;
 import com.microservice.carDefectservice.repository.TerminalRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * The CarDefectManager class is responsible for managing car defects.
  * It implements the CarDefectService interface and provides methods for
@@ -43,31 +44,16 @@ import com.microservice.carDefectservice.repository.TerminalRepository;
  * @see LocationRepository
  * @see TerminalRepository
 */
+@RequiredArgsConstructor
 @Service
 public class CarDefectManager implements CarDefectService {
 	
+    private final DefectRepository defectRepository;
+    private final CarRepository carRepository;
+    private final LocationRepository locationRepository;
+    private final TerminalRepository terminalRepository;
 
-
-	@Autowired
-    private DefectRepository defectRepository;
-    private CarRepository carRepository; 
-    private LocationRepository locationRepository;
-    private TerminalRepository terminalRepository;
-
-    @Autowired
-	public CarDefectManager(DefectRepository defectRepository, CarRepository carRepository,
-			LocationRepository locationRepository, TerminalRepository terminalRepository) {
-		super();
-		this.defectRepository = defectRepository;
-		this.carRepository = carRepository;
-		this.locationRepository = locationRepository;
-		this.terminalRepository = terminalRepository;
-	}
     
-    public CarDefectManager() {
-		super();
-	}
-
     /**
      * Returns a list of all car defects.
      * 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +13,18 @@ import com.microservice.carDefectservice.enums.TerminalStatus;
 import com.microservice.carDefectservice.exception.AppException;
 import com.microservice.carDefectservice.repository.TerminalRepository;
 
+import lombok.RequiredArgsConstructor;
+
 import com.microservice.carDefectservice.business.abstracts.TerminalService;
 
 /**
  * This class implements the TerminalService interface and provides functionality for managing terminals.
  */
+@RequiredArgsConstructor
 @Service
 public class TerminalManager implements TerminalService {
 	
-	@Autowired
-	TerminalRepository terminalRepository;
+	private final TerminalRepository terminalRepository;
 
     /**
      * Returns a list of all terminals in the system.

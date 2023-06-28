@@ -2,7 +2,6 @@ package com.microservice.carDefectservice.controller.api;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,15 +16,17 @@ import com.microservice.carDefectservice.business.abstracts.DefectService;
 import com.microservice.carDefectservice.domain.Defect;
 import com.microservice.carDefectservice.dto.DefectDTO;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Rest API for managing defects.
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/defect")
 public class DefectController {
 	
-	@Autowired
-	private DefectService defectService;
+	private final DefectService defectService;
 	
     /**
      * Returns a list of all active defects.
@@ -33,7 +34,7 @@ public class DefectController {
      * @return a ResponseEntity containing a list of all active defects
      */
 	@GetMapping("/getAllDefect") 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:read')")
 	public List<Defect> getAllDefect(){
 		return this.defectService.getAllDefect();
 	}
@@ -44,7 +45,7 @@ public class DefectController {
      * @return a ResponseEntity containing a list of all defects as DefectDTOs
      */
 	@GetMapping("/getAllDefectDto") 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
 	public List<DefectDTO> getAllDefectDto(){
 		return this.defectService.getAllDefectDto();
 	}
@@ -56,7 +57,7 @@ public class DefectController {
      * @return a ResponseEntity containing the defect with the given ID as a DefectDTO
      */
 	@GetMapping("/getDefectDtoById/{id}") 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public ResponseEntity<?> getDefectDtoById(@PathVariable Integer id) {
 		
         return new ResponseEntity<>(defectService.getDefectDtoById(id), HttpStatus.OK);
@@ -70,7 +71,7 @@ public class DefectController {
      * @return a ResponseEntity containing a succes message.
      */
     @PutMapping("/softDeleteCarDefectLocation/{DefectId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> softDeleteCarDefectLocation(@PathVariable int DefectId) {
 
         defectService.softDeleteDefect(DefectId);

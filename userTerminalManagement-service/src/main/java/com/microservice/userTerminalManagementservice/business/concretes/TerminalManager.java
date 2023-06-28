@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,14 +18,16 @@ import com.microservice.userTerminalManagementservice.enums.TerminalStatus;
 import com.microservice.userTerminalManagementservice.exception.AppException;
 import com.microservice.userTerminalManagementservice.repository.TerminalRepository;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * This class implements the TerminalService interface and provides functionality for managing terminals.
  */
+@RequiredArgsConstructor
 @Service
 public class TerminalManager implements TerminalService {
 	
-	@Autowired
-	TerminalRepository terminalRepository;
+	private final TerminalRepository terminalRepository;
 
     /**
      * Returns a list of all terminals in the system.

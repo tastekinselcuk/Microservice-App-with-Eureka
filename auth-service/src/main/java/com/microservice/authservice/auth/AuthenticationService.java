@@ -64,14 +64,14 @@ public class AuthenticationService {
 	        .lastname(request.getLastname())
 	        .email(request.getEmail())
 	        .password(passwordEncoder.encode(request.getPassword()))
-	        .roles(request.getRoles())
-          .deleted(false)
+	        .role(request.getRole())
+	        .deleted(false)
 	        .build();
 	    var savedUser = repository.save(user);
 	    var jwtToken = jwtService.generateToken(user);
 	    var refreshToken = jwtService.generateRefreshToken(user);
 	    saveUserToken(savedUser, jwtToken);
-    	log.info("registration completed for {}", user.getFirstname());
+    	log.trace("registration completed for {}", user.getFirstname());
 	    return AuthenticationResponse.builder()
 	        .accessToken(jwtToken)
 	            .refreshToken(refreshToken)
@@ -100,7 +100,7 @@ public class AuthenticationService {
 		        var refreshToken = jwtService.generateRefreshToken(user);
 		        revokeAllUserTokens(user);
 		        saveUserToken(user, jwtToken);
-		    	log.info("authentication completed for {}", user.getFirstname());
+		    	log.trace("authentication completed for {}", user.getFirstname());
 		        return AuthenticationResponse.builder()
 		            .accessToken(jwtToken)
 		                .refreshToken(refreshToken)
@@ -116,6 +116,7 @@ public class AuthenticationService {
   }
 
   private void saveUserToken(User user, String jwtToken) {
+	log.trace("user saving started");
     var token = Token.builder()
         .user(user)
         .token(jwtToken)
@@ -124,6 +125,8 @@ public class AuthenticationService {
         .revoked(false)
         .build();
     tokenRepository.save(token);
+	log.trace("saving completed for {}", user.getFirstname());
+
   }
 
   private void revokeAllUserTokens(User user) {

@@ -2,7 +2,6 @@ package com.microservice.carDefectservice.controller.restController;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,18 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservice.carDefectservice.domain.Defect;
 import com.microservice.carDefectservice.dto.CarDefectServiceDTO;
 import com.microservice.carDefectservice.repository.DefectRepository;
+
+
+import lombok.RequiredArgsConstructor;
+
 import com.microservice.carDefectservice.business.abstracts.CarDefectService;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/page")
 public class CarDefectListController {
   
-    @Autowired
-    private DefectRepository defectRepository;
-
-
-    @Autowired
-    private CarDefectService carDefectService;
+    private final DefectRepository defectRepository;
+    private final CarDefectService carDefectService;
 
 	/**
 	 * Returns a pageable list of all carDefects.
@@ -35,7 +35,7 @@ public class CarDefectListController {
 	 * @return a pageable list of all carDefects.
 	 */
     @GetMapping("/PageableCarDefects")
-    @PreAuthorize("hasRole('TEAMLEAD')")
+    @PreAuthorize("hasAuthority('teamlead:read')")
     public ResponseEntity<Page<CarDefectServiceDTO>> findAllCarDefects(Pageable pageable) {
         Page<CarDefectServiceDTO> carDefects = carDefectService.findAll(pageable);
         return ResponseEntity.ok(carDefects);
@@ -47,7 +47,7 @@ public class CarDefectListController {
 	 * @return a List of all carDefects
 	 */
     @GetMapping("/carDefects")
-    @PreAuthorize("hasRole('TEAMLEAD')")
+    @PreAuthorize("hasAuthority('teamlead:read')")
     public ResponseEntity<List<CarDefectServiceDTO>> getCarDefects() {
         List<CarDefectServiceDTO> carDefects = carDefectService.getCarDefects();
         return new ResponseEntity<>(carDefects, HttpStatus.OK);
@@ -60,7 +60,7 @@ public class CarDefectListController {
 	 * @return a List of all defects
 	 */
     @GetMapping("/defects")
-    @PreAuthorize("hasRole('TEAMLEAD')")
+    @PreAuthorize("hasAuthority('teamlead:read')")
     public Page<Defect> getDefects(@PageableDefault(size = 20) Pageable pageable) {
         return defectRepository.findAll(pageable);
     }

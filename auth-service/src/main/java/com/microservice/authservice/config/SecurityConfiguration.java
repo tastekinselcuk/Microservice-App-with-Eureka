@@ -13,9 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.microservice.authservice.user.Role.ADMIN;
-import static com.microservice.authservice.user.Role.TEAMLEAD;
-import static com.microservice.authservice.user.Role.OPERATOR;
 
 
 //Configuration for HTTP requests and roles
@@ -40,19 +37,6 @@ public class SecurityConfiguration {
         //AuthService Access
         .authorizeHttpRequests()
     	.requestMatchers("/api/auth/**").permitAll()
-    	//CarDefectService Access
-    	.requestMatchers("/api/carDefect/save").hasAnyAuthority(OPERATOR.name())
-    	.requestMatchers("/api/carDefectImage/**").hasAnyRole(TEAMLEAD.name())
-    	.requestMatchers("/api/page/**").hasAnyRole(TEAMLEAD.name())
-        //ManagementService Access
-    	.requestMatchers("/api/terminal/manager/**").hasAnyRole(ADMIN.name())
-    	.requestMatchers("/api/user/manager/**").hasAnyRole(ADMIN.name())
-        //Api
-    	.requestMatchers("/api/users/**").hasAnyRole(ADMIN.name())
-    	.requestMatchers("/api/car/**").hasAnyRole(ADMIN.name())
-    	.requestMatchers("/api/defect/**").hasAnyRole(ADMIN.name(), TEAMLEAD.name())
-    	.requestMatchers("/api/terminals/**").hasAnyRole(ADMIN.name(), TEAMLEAD.name())
-        .requestMatchers("/api/**").authenticated()
 
         
         .anyRequest()

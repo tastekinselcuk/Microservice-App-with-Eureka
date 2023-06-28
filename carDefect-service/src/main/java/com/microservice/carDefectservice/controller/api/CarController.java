@@ -2,7 +2,6 @@ package com.microservice.carDefectservice.controller.api;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,16 +18,18 @@ import com.microservice.carDefectservice.business.abstracts.CarService;
 import com.microservice.carDefectservice.domain.Car;
 import com.microservice.carDefectservice.dto.CarDTO;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Rest API for managing cars.
 */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/car")
 public class CarController {
 	
 
-	@Autowired
-	private CarService carService;
+	private final CarService carService;
 	
 	/**
 	 * Returns a list of all cars.
@@ -36,7 +37,7 @@ public class CarController {
 	 * @return a ResponseEntity containing a list of all cars
 	*/
 	@GetMapping("/getAllCar")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:read')")
 	public List<Car> getAllCar(){
 		return this.carService.getAllCar();
 	}
@@ -47,7 +48,7 @@ public class CarController {
 	 * @return a ResponseEntity containing a list of all cars as CarDTOs
 	*/
     @GetMapping("/getAllCarDto")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public List<CarDTO> getAllCarDto() {
         return this.carService.getAllCarDto();
     }
@@ -59,7 +60,7 @@ public class CarController {
 	 * @return a ResponseEntity containing the car with the given ID.
 	*/
     @GetMapping("/getCarDtoById/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public ResponseEntity<?> getCarDtoById(@PathVariable Integer id) {
 
         return new ResponseEntity<>(carService.getCarDtoById(id), HttpStatus.OK);
@@ -73,7 +74,7 @@ public class CarController {
 	 * @return a ResponseEntity containing a success message.
 	*/
 	@PostMapping("/saveCar") 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:create')")
 	public ResponseEntity<String> saveCar(@RequestBody Car car){
 
 		carService.saveCar(car);
@@ -90,7 +91,7 @@ public class CarController {
      * @return a ResponseEntity containing a success message.
      */
     @PutMapping("/updateCar/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> updateCar(@PathVariable Integer id, @RequestBody Car car) {
 
     	carService.updateCar(id, car);
@@ -106,7 +107,7 @@ public class CarController {
      * @return a ResponseEntity containing a success message.
      */
 	@PutMapping("/softDelete/{carId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('admin:update')")
 	public ResponseEntity<String> softDeleteCar(@PathVariable int carId) {
 
 		carService.softDeleteCar(carId);

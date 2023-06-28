@@ -5,9 +5,6 @@ import java.util.List;
 import com.microservice.carDefectservice.domain.Car;
 import com.microservice.carDefectservice.dto.CarDTO;
 
-
-
-
 public interface CarService {
 
 	
@@ -22,8 +19,6 @@ public interface CarService {
     Car updateCar(Integer id, Car car);
     
     void softDeleteCar(int id);
-
-	
 	
 }
 

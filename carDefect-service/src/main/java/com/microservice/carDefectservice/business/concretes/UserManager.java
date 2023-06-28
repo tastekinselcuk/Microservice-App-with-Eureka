@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,10 +26,7 @@ public class UserManager implements UserService {
 
 	  private final PasswordEncoder passwordEncoder;
 	  private final JwtService jwtService;
-
-
-    @Autowired
-    private UserRepository userRepository;
+	  private final UserRepository userRepository;
 
     /**
      * Returns a list of all users in the system
@@ -51,7 +47,7 @@ public class UserManager implements UserService {
         List<User> userList = userRepository.findByDeletedFalse();
         List<UserDTO> userDTOList = new ArrayList<>();
         for (User user : userList) {
-            userDTOList.add(new UserDTO(user.getFirstname(), user.getLastname(), user.getEmail(), user.getRoles()));
+            userDTOList.add(new UserDTO(user.getFirstname(), user.getLastname(), user.getEmail(), user.getRole()));
         }
         return userDTOList;
     }
@@ -73,7 +69,7 @@ public class UserManager implements UserService {
         }
         Optional<User> optionalUser = userRepository.findByIdAndDeletedFalse(id);
         User existingUser = optionalUser.get();
-        return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getEmail(), existingUser.getRoles());
+        return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getEmail(), existingUser.getRole());
     }
 
     /**
@@ -99,7 +95,7 @@ public class UserManager implements UserService {
             );
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(user.getRoles());
+        user.setRole(user.getRole());
         userRepository.save(user);
         jwtService.generateToken(user);
         return user;
@@ -126,7 +122,7 @@ public class UserManager implements UserService {
         User existingUser = optionalUser.get();        
         existingUser.setFirstname(user.getFirstname());
         existingUser.setLastname(user.getLastname());
-        existingUser.setRoles(user.getRoles());
+        existingUser.setRole(user.getRole());
         return userRepository.save(existingUser);
 
     }
