@@ -76,11 +76,17 @@ public class AuthenticationController {
 	    
   }
 
-  
-	  @PostMapping("/refresh-token")
-	  public void refreshToken(HttpServletRequest request,HttpServletResponse response) throws IOException {
-	    service.refreshToken(request, response);
-	  }
+  /**
+   * Refreshes the access token using the provided refresh token.
+   *
+   * @param request  HttpServletRequest - the HTTP request object.
+   * @param response HttpServletResponse - the HTTP response object.
+   * @throws IOException if an I/O error occurs.
+   */
+  @PostMapping("/refresh-token")
+  public void refreshToken(HttpServletRequest request,HttpServletResponse response) throws IOException {
+    service.refreshToken(request, response);
+  }
 
 
 }

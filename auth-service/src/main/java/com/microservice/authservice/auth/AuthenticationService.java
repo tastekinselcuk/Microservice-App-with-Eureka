@@ -115,35 +115,50 @@ public class AuthenticationService {
 	    
   }
 
+  /**
+   * Saves the user token in the token repository.
+   *
+   * @param user     User - the user object.
+   * @param jwtToken String - the JWT token.
+   */
   private void saveUserToken(User user, String jwtToken) {
-	log.trace("user saving started");
-    var token = Token.builder()
-        .user(user)
-        .token(jwtToken)
-        .tokenType(TokenType.BEARER)
-        .expired(false)
-        .revoked(false)
-        .build();
-    tokenRepository.save(token);
-	log.trace("saving completed for {}", user.getFirstname());
+		log.trace("saving user started");
+	    var token = Token.builder()
+	        .user(user)
+	        .token(jwtToken)
+	        .tokenType(TokenType.BEARER)
+	        .expired(false)
+	        .revoked(false)
+	        .build();
+	    tokenRepository.save(token);
+		log.trace("saving completed for {}", user.getFirstname());
 
   }
 
+  /**
+   * Revokes all tokens associated with the given user.
+   *
+   * @param user User - the user object.
+   */
   private void revokeAllUserTokens(User user) {
-    var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-    if (validUserTokens.isEmpty())
-      return;
-    validUserTokens.forEach(token -> {
-      token.setExpired(true);
-      token.setRevoked(true);
-    });
-    tokenRepository.saveAll(validUserTokens);
+	    var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+	    if (validUserTokens.isEmpty())
+	      return;
+	    validUserTokens.forEach(token -> {
+	      token.setExpired(true);
+	      token.setRevoked(true);
+	    });
+	    tokenRepository.saveAll(validUserTokens);
   }
 
-  public void refreshToken(
-          HttpServletRequest request,
-          HttpServletResponse response
-  ) throws IOException {
+  /**
+   * Refreshes the access token using the provided refresh token.
+   *
+   * @param request  HttpServletRequest - the HTTP request object.
+   * @param response HttpServletResponse - the HTTP response object.
+   * @throws IOException if an I/O error occurs.
+   */
+  public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
     final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
     final String refreshToken;
     final String userEmail;
