@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +72,12 @@ public class CarManager implements CarService{
         Car car = optionalCar.get();
         return new CarDTO(car.getCarId(), car.getCarModel());
     }
+    
+	@Override
+	public Page<CarDTO> getPageableCar(Pageable pageable) {
+		Page<Car> cars = carRepository.findByDeletedFalse(pageable);
+		return cars.map(this::convertToDto);
+	}
 	
     /**
      * Saves a new car to the system.
@@ -100,7 +108,6 @@ public class CarManager implements CarService{
         } 
         Optional<Car> optionalCar = carRepository.findByCarIdAndDeletedFalse(carId);
         Car existingCar = optionalCar.get();
-        existingCar.setCarId(car.getCarId());
         existingCar.setCarModel(car.getCarModel());
 		return carRepository.save(existingCar);
 	}
@@ -123,6 +130,13 @@ public class CarManager implements CarService{
         existingCar.setDeleted(true);
         carRepository.save(existingCar);
     }
+    
+	private CarDTO convertToDto(Car car) {
+		return CarDTO.builder()
+			.carId(car.getCarId())
+			.carModel(car.getCarModel())
+			.build();
+	}
 
 
 }

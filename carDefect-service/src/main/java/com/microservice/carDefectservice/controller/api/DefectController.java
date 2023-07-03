@@ -2,6 +2,9 @@ package com.microservice.carDefectservice.controller.api;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -59,10 +62,20 @@ public class DefectController {
 	@GetMapping("/getDefectDtoById/{id}") 
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public ResponseEntity<?> getDefectDtoById(@PathVariable Integer id) {
-		
         return new ResponseEntity<>(defectService.getDefectDtoById(id), HttpStatus.OK);
-
 	}
+	
+	/**
+	 * Returns a list of all defects.
+	 * 
+	 * @return a List of all defects
+	 */
+    @GetMapping("/getPageableDefect")
+    @PreAuthorize("hasAuthority('teamlead:read')")
+    public ResponseEntity<Page<DefectDTO>> getPageableDefect(@PageableDefault(size = 20) Pageable pageable) {
+        Page<DefectDTO> defectDTOs = defectService.getPageableDefect(pageable);
+        return ResponseEntity.ok(defectDTOs);
+    }
     
 	/**
      * Soft deletes the defect with the given ID.

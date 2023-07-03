@@ -62,17 +62,17 @@ public class CarDefectManager implements CarDefectService {
 	@Override
 	public List<CarDefectServiceDTO> getCarDefects() {
         List<CarDefectServiceDTO> result = new ArrayList<>();
-        List<Defect> faults = defectRepository.findAll();
-        for (Defect fault : faults) {
+        List<Defect> defects = defectRepository.findByDeletedFalse();
+        for (Defect defect : defects) {
         	CarDefectServiceDTO dto = new CarDefectServiceDTO();
-            dto.setCarId(fault.getCar().getCarId());
-            dto.setDefectPartCategory(fault.getDefectPartCategory());
-            dto.setDefectPartName(fault.getDefectPartName());
-            dto.setReportedBy(fault.getReportedBy());
-            dto.setReportedDate(fault.getReportedDate());
-            dto.setLatitude(fault.getLocation().getLatitude());
-            dto.setLongitude(fault.getLocation().getLongitude());
-            dto.setTerminalName(fault.getTerminal().getTerminalName());
+            dto.setCarId(defect.getCar().getCarId());
+            dto.setDefectPartCategory(defect.getDefectPartCategory());
+            dto.setDefectPartName(defect.getDefectPartName());
+            dto.setReportedBy(defect.getReportedBy());
+            dto.setReportedDate(defect.getReportedDate());
+            dto.setLatitude(defect.getLocation().getLatitude());
+            dto.setLongitude(defect.getLocation().getLongitude());
+            dto.setTerminalName(defect.getTerminal().getTerminalName());
             result.add(dto);
         }
         return result;
@@ -164,8 +164,8 @@ public class CarDefectManager implements CarDefectService {
 		    HighGui.waitKey(); 
 	}
 	
-	public Page<CarDefectServiceDTO> findAll(Pageable pageable) {
-	    Page<Defect> defects = defectRepository.findAll(pageable);
+	public Page<CarDefectServiceDTO> getPageableCarDefect(Pageable pageable) {
+	    Page<Defect> defects = defectRepository.findByDeletedFalse(pageable);
 	    return defects.map(this::convertToDto);
 	}
 

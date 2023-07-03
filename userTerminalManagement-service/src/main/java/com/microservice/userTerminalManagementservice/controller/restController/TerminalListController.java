@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
  * Rest API for managing terminals.
  */
 @RestController
-@RequestMapping("/api/TerminalPage")
+@RequestMapping("/api/terminalPage")
 @RequiredArgsConstructor
 public class TerminalListController {
 	
@@ -33,7 +33,7 @@ public class TerminalListController {
 	 * 
 	 * @return a paginated List of all terminals
 	 */
-	@GetMapping("/getPageableTerminals")
+	@GetMapping("/getPageableTerminal")
     @PreAuthorize("hasAuthority('admin:read')")
 	public Page<TerminalDTO> getTerminals(@RequestParam(name = "status", required = false) String status,
 			@RequestParam(name = "terminalName", required = false) String terminalName,

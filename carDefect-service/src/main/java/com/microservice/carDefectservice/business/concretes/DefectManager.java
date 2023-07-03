@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +74,12 @@ public class DefectManager implements DefectService {
 	    Defect existingDefect = optionalDefect.get();
 	    return new DefectDTO(existingDefect.getDefectId(), existingDefect.getDefectPartCategory(), existingDefect.getDefectPartName(), existingDefect.getReportedBy(), existingDefect.getReportedDate(), existingDefect.getLocation().getLatitude(), existingDefect.getLocation().getLongitude(), existingDefect.getTerminal().getTerminalName());
 	} 
+	
+    @Override
+    public Page<DefectDTO> getPageableDefect(Pageable pageable) {
+        Page<Defect> defects = defectRepository.findByDeletedFalse(pageable);
+        return defects.map(this::convertToDto);
+    }
 
 
     /**
@@ -98,6 +106,20 @@ public class DefectManager implements DefectService {
         }
         defectRepository.save(existingDefect);
         
+    }
+
+
+    public DefectDTO convertToDto(Defect defect) {
+        return DefectDTO.builder()
+            .defectId(defect.getDefectId())
+            .defectPartCategory(defect.getDefectPartCategory())
+            .defectPartName(defect.getDefectPartName())
+            .reportedBy(defect.getReportedBy())
+            .reportedDate(defect.getReportedDate())
+            .latitude(defect.getLocation().getLatitude())
+            .longitude(defect.getLocation().getLongitude())
+            .terminalName(defect.getTerminal().getTerminalName())
+            .build();
     }
 
 

@@ -83,7 +83,7 @@ public class AuthenticationController {
    * @param response HttpServletResponse - the HTTP response object.
    * @throws IOException if an I/O error occurs.
    */
-  @PostMapping("/refresh-token")
+  @PostMapping("/refreshToken")
   public void refreshToken(HttpServletRequest request,HttpServletResponse response) throws IOException {
     service.refreshToken(request, response);
   }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -70,6 +72,11 @@ public class UserManager implements UserService {
         Optional<User> optionalUser = userRepository.findByIdAndDeletedFalse(id);
         User existingUser = optionalUser.get();
         return new UserDTO(existingUser.getFirstname(), existingUser.getLastname(), existingUser.getEmail(), existingUser.getRole());
+    }
+    
+    @Override
+    public Page<UserDTO> getPageableUser(Pageable pageable) {
+        return userRepository.findByDeletedFalse(pageable).map(this::convertToDto);
     }
 
     /**
@@ -176,6 +183,15 @@ public class UserManager implements UserService {
         User existingUser = optionalUser.get();
         existingUser.setDeleted(true);
         userRepository.save(existingUser);
+    }
+	
+    private UserDTO convertToDto(User user) {
+        return UserDTO.builder()
+            .firstname(user.getFirstname())
+            .lastname(user.getLastname())
+            .email(user.getEmail())
+            .role(user.getRole())
+            .build();
     }
 	
 }

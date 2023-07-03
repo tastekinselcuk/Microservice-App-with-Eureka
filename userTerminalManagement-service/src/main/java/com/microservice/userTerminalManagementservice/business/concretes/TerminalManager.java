@@ -53,61 +53,7 @@ public class TerminalManager implements TerminalService {
     	}
 		return terminalDTOList;
 	}
-
-    /**
-     * Saves a new terminal to the system.
-     *
-     * @param terminal Terminal object to be saved
-     * @return Terminal object that was saved
-     */
-	@Override
-	public Terminal saveTerminal(Terminal terminal) {
-		return terminalRepository.save(terminal);
-	}
 	
-    /**
-     * Changes the status of a terminal based on the provided id.
-     *
-     * @param id ID of the terminal to be updated
-     */
-	@Override
-	public void changeTerminalStatus(int id) {
-	    Optional<Terminal> optionalTerminal = terminalRepository.findById(id);
-	    if (optionalTerminal.isEmpty()) {
-	        throw new AppException(
-	                HttpStatus.BAD_REQUEST,
-	                "No Id Provided",
-	                "Please provide id of the record you want to update.",
-	                "No id provided for the record to be updated.");
-	    } 
-	    
-	    Terminal terminal = optionalTerminal.get();
-	    
-	    if (terminal.getStatus() == TerminalStatus.ACTIVE) {
-	        terminal.setStatus(TerminalStatus.INACTIVE);
-	        terminalRepository.save(terminal);
-	        throw new AppException(
-	                HttpStatus.OK,
-	                "Terminal status changed to Inactive",
-	                "The terminal record you want to update is Inactived.",
-	                "The terminal record you want to update is Inactived.");
-	    } else if (terminal.getStatus() == TerminalStatus.INACTIVE) {
-	        terminal.setStatus(TerminalStatus.ACTIVE);
-	        terminalRepository.save(terminal);
-	        throw new AppException(
-	                HttpStatus.OK,
-	                "Terminal status changed to Active",
-	                "The terminal record you want to update is activated.",
-	                "The terminal record you want to update is activated.");
-	    } else {
-	        throw new AppException(
-	                HttpStatus.INTERNAL_SERVER_ERROR,
-	                "Invalid Terminal Status",
-	                "The terminal record you want to update has an invalid status: " + terminal.getStatus(),
-	                "The terminal record you want to update has an invalid status: " + terminal.getStatus());
-	    }
-	}
-
 	/**
 	 * 
 	 * Returns a paginated list of TerminalDTO objects based on the given filters and pageable information.
@@ -119,7 +65,7 @@ public class TerminalManager implements TerminalService {
 	 */
 	@Override
 	public Page<TerminalDTO> getTerminals(String status, String terminalName, Pageable pageable) {
-		List<Terminal> allTerminals = terminalRepository.findAll();
+		List<Terminal> allTerminals = terminalRepository.findByStatus(TerminalStatus.ACTIVE);
 		// Filters the list of terminals based on the given status parameter, which is expected to be a string representation of a TerminalStatus enum value.
 		if (status != null) {
 			TerminalStatus terminalStatus = TerminalStatus.valueOf(status.toUpperCase());
@@ -144,6 +90,47 @@ public class TerminalManager implements TerminalService {
 
 		return new PageImpl<>(terminalDTOs, pageable, activeTerminals.size());
 	}
+
+    /**
+     * Saves a new terminal to the system.
+     *
+     * @param terminal Terminal object to be saved
+     * @return Terminal object that was saved
+     */
+	@Override
+	public Terminal saveTerminal(Terminal terminal) {
+		return terminalRepository.save(terminal);
+	}
+	
+	/**
+	 * Changes the status of a terminal based on the provided id.
+	 *
+	 * @param id ID of the terminal to be updated
+	 */
+	@Override
+	public void changeTerminalStatus(int id) {
+	    Optional<Terminal> optionalTerminal = terminalRepository.findById(id);
+	    if (optionalTerminal.isEmpty()) {
+	        throw new AppException(
+	                HttpStatus.BAD_REQUEST,
+	                "No Id Provided",
+	                "Please provide id of the record you want to update.",
+	                "No id provided for the record to be updated.");
+	    } 
+	    
+	    Terminal terminal = optionalTerminal.get();
+	    
+	    if (terminal.getStatus() == TerminalStatus.ACTIVE) {
+	        terminal.setStatus(TerminalStatus.INACTIVE);
+	        terminalRepository.save(terminal);
+	        return;
+	    } else if (terminal.getStatus() == TerminalStatus.INACTIVE) {
+	        terminal.setStatus(TerminalStatus.ACTIVE);
+	        terminalRepository.save(terminal);
+	        return;
+	    }
+	}
+
 
 	
 

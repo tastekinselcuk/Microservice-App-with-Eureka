@@ -2,6 +2,9 @@ package com.microservice.userTerminalManagementservice.business.abstracts;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.microservice.userTerminalManagementservice.domain.user.User;
 import com.microservice.userTerminalManagementservice.dto.UserDTO;
 
@@ -12,6 +15,8 @@ public interface UserService {
     List<UserDTO> getAllUserDtos();
     
     UserDTO getUserDtoById(Integer id);
+    
+    Page<UserDTO> getPageableUser(Pageable pageable);
     
     User saveUser(User user);
     

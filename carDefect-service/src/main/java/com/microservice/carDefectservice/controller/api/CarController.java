@@ -2,6 +2,9 @@ package com.microservice.carDefectservice.controller.api;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,9 +65,19 @@ public class CarController {
     @GetMapping("/getCarDtoById/{id}")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public ResponseEntity<?> getCarDtoById(@PathVariable Integer id) {
-
         return new ResponseEntity<>(carService.getCarDtoById(id), HttpStatus.OK);
-
+    }
+    
+	/**
+	 * Returns a list of all cars.
+	 * 
+	 * @return a List of all cars
+	 */
+    @GetMapping("/getPageableCar")
+    @PreAuthorize("hasAuthority('teamlead:read')")
+    public ResponseEntity<Page<CarDTO>> getPageableCar(@PageableDefault(size = 100) Pageable pageable) {
+        Page<CarDTO> carDTOs = carService.getPageableCar(pageable);
+        return ResponseEntity.ok(carDTOs);
     }
     
 	/**
@@ -106,12 +119,12 @@ public class CarController {
      * @param id the ID of the car to delete
      * @return a ResponseEntity containing a success message.
      */
-	@PutMapping("/softDelete/{carId}")
+	@PutMapping("/softDeleteCar/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
-	public ResponseEntity<String> softDeleteCar(@PathVariable int carId) {
+	public ResponseEntity<String> softDeleteCar(@PathVariable int id) {
 
-		carService.softDeleteCar(carId);
-        String message = String.format("Soft delet completed successfully for user with id '%s'.", carId);
+		carService.softDeleteCar(id);
+        String message = String.format("Soft delet completed successfully for user with id '%s'.", id);
         return new ResponseEntity<>(message, HttpStatus.OK);
 
 	}

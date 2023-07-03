@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservice.carDefectservice.domain.Defect;
 import com.microservice.carDefectservice.dto.CarDefectServiceDTO;
-import com.microservice.carDefectservice.repository.DefectRepository;
+import com.microservice.carDefectservice.dto.DefectDTO;
 
 
 import lombok.RequiredArgsConstructor;
 
 import com.microservice.carDefectservice.business.abstracts.CarDefectService;
+import com.microservice.carDefectservice.business.abstracts.DefectService;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/page")
+@RequestMapping("/api/carDefect")
 public class CarDefectListController {
   
-    private final DefectRepository defectRepository;
+    private final DefectService defectService;
     private final CarDefectService carDefectService;
 
 	/**
@@ -34,10 +34,10 @@ public class CarDefectListController {
 	 * 
 	 * @return a pageable list of all carDefects.
 	 */
-    @GetMapping("/PageableCarDefects")
+    @GetMapping("/GetPageableCarDefect")
     @PreAuthorize("hasAuthority('teamlead:read')")
     public ResponseEntity<Page<CarDefectServiceDTO>> findAllCarDefects(Pageable pageable) {
-        Page<CarDefectServiceDTO> carDefects = carDefectService.findAll(pageable);
+        Page<CarDefectServiceDTO> carDefects = carDefectService.getPageableCarDefect(pageable);
         return ResponseEntity.ok(carDefects);
     }
     
@@ -46,7 +46,7 @@ public class CarDefectListController {
 	 * 
 	 * @return a List of all carDefects
 	 */
-    @GetMapping("/carDefects")
+    @GetMapping("/getCarDefect")
     @PreAuthorize("hasAuthority('teamlead:read')")
     public ResponseEntity<List<CarDefectServiceDTO>> getCarDefects() {
         List<CarDefectServiceDTO> carDefects = carDefectService.getCarDefects();
@@ -59,10 +59,11 @@ public class CarDefectListController {
 	 * 
 	 * @return a List of all defects
 	 */
-    @GetMapping("/defects")
+    @GetMapping("/getPageableDefect")
     @PreAuthorize("hasAuthority('teamlead:read')")
-    public Page<Defect> getDefects(@PageableDefault(size = 20) Pageable pageable) {
-        return defectRepository.findAll(pageable);
+    public ResponseEntity<Page<DefectDTO>> getPageableDefect(@PageableDefault(size = 20) Pageable pageable) {
+        Page<DefectDTO> defectDTOs = defectService.getPageableDefect(pageable);
+        return ResponseEntity.ok(defectDTOs);
     }
     
     

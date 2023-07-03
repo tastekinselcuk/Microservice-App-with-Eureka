@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CarDTO {
 
-	private int cartId;
+	private int carId;
 	private String carModel;
 
 

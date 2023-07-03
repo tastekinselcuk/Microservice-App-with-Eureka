@@ -1,23 +1,29 @@
 package com.microservice.carDefectservice.controller.restController;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
+import javax.imageio.ImageIO;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.microservice.carDefectservice.domain.Defect;
-import com.microservice.carDefectservice.repository.DefectRepository;
+import com.microservice.carDefectservice.business.abstracts.CarImageService;
+import com.microservice.carDefectservice.domain.CarImage;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,50 +32,60 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/carDefectImage")
 public class CarDefectImageController {
 	
-    private final DefectRepository defectRepository;
-	
-	@GetMapping("/createImage/{carId}")
-    @PreAuthorize("hasAuthority('teamlead:read')")
-	public void createImage () {
-		
-		
-	}
+    private final CarImageService carImageService;
 	
 
+    @PostMapping("/saveCar")
+    @PreAuthorize("hasAuthority('teamlead:create')")
+    public ResponseEntity<String> saveCarImage(@RequestParam("file") MultipartFile file) {
+      try {
+        byte[] blobImage = file.getBytes();
+        CarImage carImage = new CarImage();
+        carImage.setBlobImage(blobImage);
 
-    @GetMapping("/car-defects/{carId}")
+        CarImage savedCarImage = carImageService.saveCar(carImage);
+        return ResponseEntity.ok("Car image saved with ID: " + savedCarImage.getCarId());
+      } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to save car image.");
+      }
+    }
+	
+    @GetMapping("/getCarImage/{carId}")
     @PreAuthorize("hasAuthority('teamlead:read')")
-    public ResponseEntity<byte[]> getCarDefectById(@PathVariable Integer carId) throws IOException {
-        // Load the OpenCV core library
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+    public ResponseEntity<byte[]> getCarImage(@PathVariable Long carId,
+                                              @RequestParam(value = "markX", required = false, defaultValue = "200") int markX,
+                                              @RequestParam(value = "markY", required = false, defaultValue = "100") int markY) {
+      Optional<CarImage> carImageOptional = carImageService.getCarImageById(carId);
+      if (carImageOptional.isPresent()) {
+        CarImage carImage = carImageOptional.get();
+        byte[] imageBytes = carImage.getBlobImage();
+        BufferedImage bufferedImage;
+        try {
+          bufferedImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
+        } catch (IOException e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        int markSize = 50;
+        Color markColor = Color.RED;
+        BufferedImage markedImage = carImageService.markCarImage(bufferedImage, markX, markY, markSize, markColor);
 
-        // Read the contents of the image
-        String file = "images/fe428443-ce52-4f30-8a69-120975b96a54.jpg";
-        Mat src = Imgcodecs.imread(file);
-        
-	    Optional<Defect> optionalDefect = defectRepository.findByDefectIdAndDeletedFalse(carId);
-    	Defect defect = optionalDefect.get();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+          ImageIO.write(markedImage, "png", baos);
+        } catch (IOException e) {
+          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        byte[] markedImageBytes = baos.toByteArray();
 
-
-        // Prepare color and position of the marker
-        Scalar color = new Scalar(0, 0, 125);
-        Point point1 = new Point(defect.getLocation().getLatitude(), defect.getLocation().getLongitude());
-        Point point2 = new Point(150, 240);
-        Point point3 = new Point(300, 150);
-        Point point4 = new Point(600, 60);
-
-        // Draw marker
-        Imgproc.drawMarker(src, point1, color, Imgproc.MARKER_SQUARE, 150, 8, Imgproc.LINE_8);
-        Imgproc.drawMarker(src, point2, color, Imgproc.MARKER_SQUARE, 150, 8, Imgproc.LINE_8);
-        Imgproc.drawMarker(src, point3, color, Imgproc.MARKER_SQUARE, 150, 8, Imgproc.LINE_8);
-        Imgproc.drawMarker(src, point4, color, Imgproc.MARKER_SQUARE, 150, 8, Imgproc.LINE_8);
-
-        // Convert the image to a byte array
-        byte[] imageBytes = new byte[(int)(src.width() * src.height() * src.elemSize())];
-        src.get(0, 0, imageBytes);
-
-        // Return the image bytes as a response
-        return ResponseEntity.ok(imageBytes);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        headers.setContentLength(markedImageBytes.length);
+        return new ResponseEntity<>(markedImageBytes, headers, HttpStatus.OK);
+      } else {
+        return ResponseEntity.notFound().build();
+      }
     }
 
 }
+
+

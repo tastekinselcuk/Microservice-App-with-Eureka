@@ -1,18 +1,20 @@
 package com.microservice.userTerminalManagementservice.controller.api;
 
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import com.microservice.userTerminalManagementservice.business.abstracts.UserService;
 import com.microservice.userTerminalManagementservice.domain.user.User;
@@ -25,7 +27,7 @@ import lombok.RequiredArgsConstructor;
  * Rest API for managing users.
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -36,7 +38,7 @@ public class UserController {
      * 
      * @return a ResponseEntity containing a list of all users
      */
-    @GetMapping("/getAllUsers")
+    @GetMapping("/getAllUser")
     @PreAuthorize("hasAuthority('admin:read')")
     public List<User> getAllUsers() {
     	return this.userService.getAllUsers();
@@ -47,7 +49,7 @@ public class UserController {
      * 
      * @return a ResponseEntity containing a list of all users as UserDTOs
      */
-    @GetMapping("/getAllUserDtos")
+    @GetMapping("/getAllUserDto")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public List<UserDTO> getAllUserDtos() {
     	return this.userService.getAllUserDtos();
@@ -62,27 +64,20 @@ public class UserController {
     @GetMapping("/getUserDtoById/{id}")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
     public ResponseEntity<?> getUserDtoById(@PathVariable Integer id) {
-
         return new ResponseEntity<>(userService.getUserDtoById(id), HttpStatus.OK);
-
-
-
     }
-
-    /**
-     * Adds a new user
-     * 
-     * @param user the user to add
-     * @return a ResponseEntity containing a success message.
-     */
-    @PostMapping("/saveUser")
-    @PreAuthorize("hasAuthority('admin:create')")
-    public ResponseEntity<String> saveUser(@Valid @RequestBody User user) {
-        userService.saveUser(user);
-        String message = String.format("User '%s' saved successfully.", user.getEmail());
-        return new ResponseEntity<>(message, HttpStatus.CREATED);
+    
+	/**
+	 * Returns a list of all users.
+	 * 
+	 * @return a List of all users
+	 */
+    @GetMapping("/getPageableUser")
+    @PreAuthorize("hasAuthority('teamlead:read')")
+    public ResponseEntity<Page<UserDTO>> getPageableUser(@PageableDefault(size = 20) Pageable pageable) {
+        Page<UserDTO> defectDTOs = userService.getPageableUser(pageable);
+        return ResponseEntity.ok(defectDTOs);
     }
-
 
     /**
      * Updates an existing user with the given ID
@@ -108,11 +103,13 @@ public class UserController {
      * @return a ResponseEntity containing a success message.
      */
     @PutMapping("/changeUserPassword/{id}")
-    @PreAuthorize("hasAuthority('admin:update') or @userSecurity.checkUserId(authentication,#id)")
-    public ResponseEntity<String> changeUserPassword(@PathVariable Integer id, @RequestBody String password) {
-        userService.changeUserPassword(id, password);
-        String message = String.format("Password changed successfully for user with id '%s'.", id);
-        return new ResponseEntity<>(message, HttpStatus.OK);
+    public ResponseEntity<String> changeUserPassword(@PathVariable Integer id, @RequestBody Map<String, String> request) {
+        try {
+            userService.changeUserPassword(id, request.get("password"));
+            return ResponseEntity.ok("Password changed successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password.");
+        }
     }
 
 
