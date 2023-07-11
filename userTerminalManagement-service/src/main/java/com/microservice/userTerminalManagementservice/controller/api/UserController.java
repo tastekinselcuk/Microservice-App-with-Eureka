@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.userTerminalManagementservice.business.abstracts.UserService;
-import com.microservice.userTerminalManagementservice.domain.user.User;
+import com.microservice.userTerminalManagementservice.domain.User;
 import com.microservice.userTerminalManagementservice.dto.UserDTO;
 
 import jakarta.validation.Valid;

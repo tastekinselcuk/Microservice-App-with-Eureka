@@ -1,6 +1,7 @@
-package com.microservice.userTerminalManagementservice.domain.token;
+package com.microservice.authservice.domain;
 
-import com.microservice.userTerminalManagementservice.domain.user.User;
+import com.microservice.authservice.enums.TokenType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

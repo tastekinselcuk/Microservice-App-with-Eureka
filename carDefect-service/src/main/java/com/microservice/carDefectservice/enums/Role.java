@@ -1,14 +1,14 @@
-package com.microservice.userTerminalManagementservice.domain.user;
+package com.microservice.carDefectservice.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static com.microservice.carDefectservice.enums.Permission.*;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.microservice.userTerminalManagementservice.domain.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {
@@ -22,7 +22,8 @@ public enum Role {
                     TEAMLEAD_READ,
                     TEAMLEAD_UPDATE,
                     TEAMLEAD_CREATE,
-                    TEAMLEAD_DELETE
+                    TEAMLEAD_DELETE,
+                    OPERATOR_CREATE
             )
     ),
     TEAMLEAD(
@@ -42,6 +43,7 @@ public enum Role {
     @Getter
     private final Set<Permission> permissions;
 
+    //makes role class suitable for spring security
     public List<SimpleGrantedAuthority> getAuthorities() {
         var authorities = permissions.stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))

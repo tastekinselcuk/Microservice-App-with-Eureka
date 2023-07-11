@@ -29,13 +29,13 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/carDefectImage")
+@RequestMapping("/api/carDefect")
 public class CarDefectImageController {
 	
     private final CarImageService carImageService;
 	
 
-    @PostMapping("/saveCar")
+    @PostMapping("/saveCarImage")
     @PreAuthorize("hasAuthority('teamlead:create')")
     public ResponseEntity<String> saveCarImage(@RequestParam("file") MultipartFile file) {
       try {

@@ -1,4 +1,4 @@
-package com.microservice.carDefectservice.domain.user;
+package com.microservice.userTerminalManagementservice.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

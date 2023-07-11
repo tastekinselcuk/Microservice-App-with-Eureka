@@ -66,6 +66,5 @@ public class CarDefectListController {
         return ResponseEntity.ok(defectDTOs);
     }
     
-    
 
 }

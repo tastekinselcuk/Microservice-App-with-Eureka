@@ -1,6 +1,7 @@
 package com.microservice.userTerminalManagementservice.dto;
 
-import com.microservice.userTerminalManagementservice.domain.user.Role;
+import com.microservice.userTerminalManagementservice.enums.Role;
+
 import lombok.*;
 
 @Data

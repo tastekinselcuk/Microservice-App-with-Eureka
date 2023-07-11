@@ -71,7 +71,7 @@ public class TerminalController {
 	 * @param terminal the terminal to add
 	 * @return a ResponseEntity containing a success message.
 	 */
-    @PostMapping("/save")
+    @PostMapping("/saveTerminal")
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String> saveTerminal(@RequestBody Terminal terminal){
     	
@@ -95,8 +95,5 @@ public class TerminalController {
         return new ResponseEntity<>(message, HttpStatus.OK); 
         
     }
-    
-    
-    
     
 }

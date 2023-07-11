@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.microservice.userTerminalManagementservice.domain.user.User;
+import com.microservice.userTerminalManagementservice.domain.User;
 import com.microservice.userTerminalManagementservice.dto.UserDTO;
 
 public interface UserService {

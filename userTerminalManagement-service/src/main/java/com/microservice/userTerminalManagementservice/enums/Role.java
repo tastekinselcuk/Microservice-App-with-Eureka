@@ -1,14 +1,14 @@
-package com.microservice.carDefectservice.domain.user;
+package com.microservice.userTerminalManagementservice.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static com.microservice.userTerminalManagementservice.enums.Permission.*;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.microservice.carDefectservice.domain.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {

@@ -1,4 +1,4 @@
-package com.microservice.authservice.user;
+package com.microservice.authservice.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ public enum Permission {
     TEAMLEAD_UPDATE("teamlead:update"),
     TEAMLEAD_CREATE("teamlead:create"),
     TEAMLEAD_DELETE("teamlead:delete"),
-    OPERATOR_READ("operator:read");
+    OPERATOR_CREATE("operator:create");
 
     @Getter
     private final String permission;

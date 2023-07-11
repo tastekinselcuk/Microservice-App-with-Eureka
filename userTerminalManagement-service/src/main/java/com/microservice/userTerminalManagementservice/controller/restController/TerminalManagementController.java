@@ -33,7 +33,7 @@ public class TerminalManagementController {
 	 * @param terminal the terminal to add
 	 * @return a ResponseEntity containing a success message.
 	 */
-    @PostMapping("/save")
+    @PostMapping("/saveTerminal")
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String> saveTerminal(@RequestBody Terminal terminal){
 		terminalService.saveTerminal(terminal);

@@ -1,6 +1,5 @@
 package com.microservice.carDefectservice.security.config;
 
-import com.microservice.carDefectservice.domain.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.microservice.carDefectservice.repository.TokenRepository;
 
 /**
  * Authentication filter
@@ -41,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain
   ) throws ServletException, IOException {
-    log.info("Starting authentication filter..");
+    log.trace("Starting authentication filter..");
 
     if (request.getServletPath().contains("/api/auth")) {
       filterChain.doFilter(request, response);
@@ -78,7 +79,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             new WebAuthenticationDetailsSource().buildDetails(request)
         );
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        log.info("User with userEmail: {} successfully authenticated", userEmail);
+        log.trace("User with userEmail: {} successfully authenticated", userEmail);
 
       }
     }

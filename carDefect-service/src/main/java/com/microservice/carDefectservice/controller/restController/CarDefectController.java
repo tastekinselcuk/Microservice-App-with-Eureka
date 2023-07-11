@@ -39,7 +39,7 @@ public class CarDefectController {
      * @return a ResponseEntity object with HTTP status 200 (OK) if the request is successful, or with
      * HTTP status 500 (INTERNAL_SERVER_ERROR) if there is an error
      */
-    @PostMapping("/save")
+    @PostMapping("/saveCarDefect")
     @PreAuthorize("hasAuthority('operator:create')")
     public ResponseEntity<?> saveCarDefect(@RequestParam(required = true) int carId,
 			   @RequestParam(required = true) String defectPartCategory,

@@ -1,11 +1,12 @@
-package com.microservice.authservice.user;
+package com.microservice.userTerminalManagementservice.domain;
 
-import com.microservice.authservice.token.Token;
+import com.microservice.userTerminalManagementservice.enums.Role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +23,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Data
 @Builder
@@ -29,9 +33,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Entity
 @Table(name = "_user")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserDetails {
 
   @Id
+  @JsonProperty("id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
   
@@ -53,7 +59,7 @@ public class User implements UserDetails {
   @Column(name = "is_deleted", nullable = false)
   private Boolean deleted = false;
 
-  @OneToMany(mappedBy = "user")
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
   private List<Token> tokens;
 
   @Override

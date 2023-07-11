@@ -1,6 +1,8 @@
 package com.microservice.authservice.auth;
 
-import com.microservice.authservice.user.Role;
+import java.util.List;
+
+import com.microservice.authservice.enums.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

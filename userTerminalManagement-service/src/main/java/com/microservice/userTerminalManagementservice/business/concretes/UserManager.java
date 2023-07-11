@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.microservice.userTerminalManagementservice.business.abstracts.UserService;
-import com.microservice.userTerminalManagementservice.domain.user.User;
+import com.microservice.userTerminalManagementservice.domain.User;
 import com.microservice.userTerminalManagementservice.dto.UserDTO;
 import com.microservice.userTerminalManagementservice.exception.AppException;
 import com.microservice.userTerminalManagementservice.repository.UserRepository;

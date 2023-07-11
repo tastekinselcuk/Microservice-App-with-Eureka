@@ -1,12 +1,12 @@
 package com.microservice.authservice.auth;
 
 import com.microservice.authservice.config.JwtService;
+import com.microservice.authservice.domain.Token;
+import com.microservice.authservice.domain.User;
+import com.microservice.authservice.enums.TokenType;
 import com.microservice.authservice.exception.AppException;
+import com.microservice.authservice.repository.TokenRepository;
 import com.microservice.authservice.repository.UserRepository;
-import com.microservice.authservice.token.Token;
-import com.microservice.authservice.token.TokenRepository;
-import com.microservice.authservice.token.TokenType;
-import com.microservice.authservice.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

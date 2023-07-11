@@ -1,14 +1,14 @@
-package com.microservice.authservice.user;
+package com.microservice.authservice.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static com.microservice.authservice.enums.Permission.*;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static com.microservice.authservice.user.Permission.*;
 
 @RequiredArgsConstructor
 public enum Role {
@@ -22,7 +22,8 @@ public enum Role {
                     TEAMLEAD_READ,
                     TEAMLEAD_UPDATE,
                     TEAMLEAD_CREATE,
-                    TEAMLEAD_DELETE
+                    TEAMLEAD_DELETE,
+            		OPERATOR_CREATE
             )
     ),
     TEAMLEAD(
@@ -35,7 +36,7 @@ public enum Role {
     ),
     OPERATOR(
             Set.of(
-                    OPERATOR_READ
+            		OPERATOR_CREATE
             )
     );
 

@@ -21,4 +21,12 @@ public interface DefectRepository extends JpaRepository<Defect, Integer> {
 	Optional<Defect> findByDefectIdAndDeletedFalse(Integer id);
 	
 	Page<Defect> findByDeletedFalse(Pageable pageable);
+	
+    Page<Defect> findByDeletedFalseAndDefectPartCategoryContainingAndDefectPartNameContainingAndReportedByContainingAndTerminal_TerminalNameContaining(
+            String defectPartCategory,
+            String defectPartName,
+            String reportedBy,
+            String terminalName,
+            Pageable pageable
+    );
 }

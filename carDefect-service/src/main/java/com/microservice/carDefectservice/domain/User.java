@@ -1,6 +1,4 @@
-package com.microservice.carDefectservice.domain.user;
-
-import com.microservice.carDefectservice.domain.token.Token;
+package com.microservice.carDefectservice.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +20,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.microservice.carDefectservice.enums.Role;
 
 @Data
 @Builder

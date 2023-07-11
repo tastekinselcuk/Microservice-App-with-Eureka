@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import com.microservice.userTerminalManagementservice.business.abstracts.UserService;
-import com.microservice.userTerminalManagementservice.domain.user.User;
+import com.microservice.userTerminalManagementservice.domain.User;
 
 /**
  * Rest API for managing users.
