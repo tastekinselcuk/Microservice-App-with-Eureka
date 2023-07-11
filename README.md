@@ -56,8 +56,8 @@ Make sure you have [Docker](https://www.docker.com/) and [Docker Compose](https:
 
 #### 1. Clone the repository:
   ```sh
-  $ git clone https://github.com/tastekinselcuk/32bit_CVQS_App
-  $ cd 32bit_CVQS_App
+  $ git clone https://github.com/tastekinselcuk/Microservice-App-with-Eureka
+  $ cd Microservice-App-with-Eureka
   ```
 #### 2.Build the Docker image:
   ```sh
