@@ -74,11 +74,6 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-		    <groupId>org.modelmapper</groupId>
-		    <artifactId>modelmapper</artifactId>
-		    <version>2.4.4</version>
-		</dependency>
-		<dependency>
 		    <groupId>org.junit.jupiter</groupId>
 		    <artifactId>junit-jupiter</artifactId>
 		    <version>5.8.2</version>
@@ -159,6 +154,11 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<image>
+						<name>microservice</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+					
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

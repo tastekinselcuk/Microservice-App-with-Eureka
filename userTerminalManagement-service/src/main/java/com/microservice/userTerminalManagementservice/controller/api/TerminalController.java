@@ -1,8 +1,5 @@
 package com.microservice.userTerminalManagementservice.controller.api;
 
-import java.util.List;
-
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.microservice.userTerminalManagementservice.business.abstracts.TerminalService;
 import com.microservice.userTerminalManagementservice.domain.Terminal;
-import com.microservice.userTerminalManagementservice.dto.TerminalDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,8 +35,8 @@ public class TerminalController {
 	 */
     @GetMapping("/getAllTerminal")
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<Terminal> getAllTerminals() {
-    	return this.terminalService.getAllTerminals();
+    public ResponseEntity<?> getAllTerminals() {
+        return new ResponseEntity<>(terminalService.getAllTerminals(), HttpStatus.OK);
     }
     
 	/**
@@ -50,8 +46,8 @@ public class TerminalController {
 	 */
     @GetMapping("/getAllTerminalDto")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
-    public List<TerminalDTO> getAllTerminalDtos() {
-    	return this.terminalService.getAllTerminalDtos();
+    public ResponseEntity<?> getAllTerminalDtos() {
+        return new ResponseEntity<>(terminalService.getAllTerminalDtos(), HttpStatus.OK);
     }
     
 	/**
@@ -61,8 +57,8 @@ public class TerminalController {
 	 */
     @GetMapping("/getPageableTerminal")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
-    public Page<TerminalDTO> getTerminals(@PageableDefault(size = 20) String status, String terminalName, Pageable pageable) {
-        return terminalService.getTerminals(status, terminalName, pageable);
+    public ResponseEntity<?> getTerminals(@PageableDefault(size = 20) String status, String terminalName, Pageable pageable) {
+        return new ResponseEntity<>(terminalService.getTerminals(status, terminalName, pageable), HttpStatus.OK);
     }
     
 	/**
@@ -74,7 +70,6 @@ public class TerminalController {
     @PostMapping("/saveTerminal")
     @PreAuthorize("hasAuthority('admin:create')")
     public ResponseEntity<String> saveTerminal(@RequestBody Terminal terminal){
-    	
 		terminalService.saveTerminal(terminal);
         String message = String.format("Terminal '%s' saved successfully.", terminal.getTerminalName());
         return new ResponseEntity<>(message, HttpStatus.CREATED);
@@ -89,7 +84,6 @@ public class TerminalController {
     @PutMapping("/changeTerminalStatus/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> changeTerminalStatus(@PathVariable Integer id) {
-    	
         terminalService.changeTerminalStatus(id);
         String message = String.format("Terminal's status with id '%s' changed successfully", id);
         return new ResponseEntity<>(message, HttpStatus.OK); 

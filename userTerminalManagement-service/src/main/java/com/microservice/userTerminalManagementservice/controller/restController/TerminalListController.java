@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -35,10 +37,10 @@ public class TerminalListController {
 	 */
 	@GetMapping("/getAllTerminal")
     @PreAuthorize("hasAuthority('admin:read')")
-	public Page<TerminalDTO> getTerminals(@RequestParam(name = "status", required = false) String status,
+	public ResponseEntity<Page<TerminalDTO>> getTerminals(@RequestParam(name = "status", required = false) String status,
 			@RequestParam(name = "terminalName", required = false) String terminalName,
 			@PageableDefault(size = 20) @SortDefault(sort = "terminalId", direction = Sort.Direction.ASC) Pageable pageable) {
-		return terminalService.getTerminals(status, terminalName, pageable);
+		return new ResponseEntity<>(terminalService.getTerminals(status, terminalName, pageable), HttpStatus.OK);
 	}
     
     

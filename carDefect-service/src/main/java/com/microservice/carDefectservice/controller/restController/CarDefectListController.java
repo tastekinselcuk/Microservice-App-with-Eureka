@@ -34,11 +34,11 @@ public class CarDefectListController {
 	 * 
 	 * @return a pageable list of all carDefects.
 	 */
-    @GetMapping("/GetPageableCarDefect")
+    @GetMapping("/getPageableCarDefect")
     @PreAuthorize("hasAuthority('teamlead:read')")
     public ResponseEntity<Page<CarDefectServiceDTO>> findAllCarDefects(Pageable pageable) {
         Page<CarDefectServiceDTO> carDefects = carDefectService.getPageableCarDefect(pageable);
-        return ResponseEntity.ok(carDefects);
+        return new ResponseEntity<>(carDefects, HttpStatus.OK);
     }
     
 	/**

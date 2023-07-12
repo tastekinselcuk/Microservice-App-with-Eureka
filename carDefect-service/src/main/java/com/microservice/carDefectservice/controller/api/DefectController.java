@@ -1,7 +1,5 @@
 package com.microservice.carDefectservice.controller.api;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.microservice.carDefectservice.business.abstracts.DefectService;
-import com.microservice.carDefectservice.domain.Defect;
 import com.microservice.carDefectservice.dto.DefectDTO;
 
 import lombok.RequiredArgsConstructor;
@@ -38,8 +35,8 @@ public class DefectController {
      */
 	@GetMapping("/getAllDefect") 
     @PreAuthorize("hasAuthority('admin:read')")
-	public List<Defect> getAllDefect(){
-		return this.defectService.getAllDefect();
+	public ResponseEntity<?> getAllDefect(){
+        return new ResponseEntity<>(defectService.getAllDefect(), HttpStatus.OK);
 	}
     
     /**
@@ -49,8 +46,8 @@ public class DefectController {
      */
 	@GetMapping("/getAllDefectDto") 
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
-	public List<DefectDTO> getAllDefectDto(){
-		return this.defectService.getAllDefectDto();
+	public ResponseEntity<?> getAllDefectDto(){
+        return new ResponseEntity<>(defectService.getAllDefectDto(), HttpStatus.OK);
 	}
 	
 	/**
@@ -86,7 +83,6 @@ public class DefectController {
     @PutMapping("/softDeleteCarDefectLocation/{DefectId}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> softDeleteCarDefectLocation(@PathVariable int DefectId) {
-
         defectService.softDeleteDefect(DefectId);
         String message = String.format("Soft delet completed successfully for defect with id '%s'.", DefectId);
         return new ResponseEntity<>(message, HttpStatus.OK);

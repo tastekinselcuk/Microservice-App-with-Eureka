@@ -83,7 +83,6 @@ public class UserManagementController {
     @PutMapping("/softDeleteUser/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> softDeleteUser(@PathVariable Integer id) {
-
     	userService.softDeleteUser(id);
         String message = String.format("Soft delet completed successfully for user with id '%s'.", id);
         return new ResponseEntity<>(message, HttpStatus.OK);

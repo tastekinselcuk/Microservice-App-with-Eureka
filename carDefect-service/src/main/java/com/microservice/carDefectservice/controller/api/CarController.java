@@ -40,8 +40,8 @@ public class CarController {
 	*/
 	@GetMapping("/getAllCar")
     @PreAuthorize("hasAuthority('admin:read')")
-	public List<Car> getAllCar(){
-		return this.carService.getAllCar();
+	public ResponseEntity<?> getAllCar(){
+        return new ResponseEntity<>(carService.getAllCar(), HttpStatus.OK);
 	}
     
 	/**
@@ -51,8 +51,8 @@ public class CarController {
 	*/
     @GetMapping("/getAllCarDto")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
-    public List<CarDTO> getAllCarDto() {
-        return this.carService.getAllCarDto();
+    public ResponseEntity<?> getAllCarDto() {
+        return new ResponseEntity<>(carService.getAllCarDto(), HttpStatus.OK);
     }
     
 	/**

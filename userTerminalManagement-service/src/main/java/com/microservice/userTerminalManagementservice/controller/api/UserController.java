@@ -40,8 +40,8 @@ public class UserController {
      */
     @GetMapping("/getAllUser")
     @PreAuthorize("hasAuthority('admin:read')")
-    public List<User> getAllUsers() {
-    	return this.userService.getAllUsers();
+    public ResponseEntity<?> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     /**
@@ -51,8 +51,8 @@ public class UserController {
      */
     @GetMapping("/getAllUserDto")
     @PreAuthorize("hasAnyAuthority('admin:read', 'teamlead:read')")
-    public List<UserDTO> getAllUserDtos() {
-    	return this.userService.getAllUserDtos();
+    public ResponseEntity<?> getAllUserDtos() {
+        return new ResponseEntity<>(userService.getAllUserDtos(), HttpStatus.OK);
     }
     
     /**
@@ -123,7 +123,6 @@ public class UserController {
     @PutMapping("/softDeleteUser/{id}")
     @PreAuthorize("hasAuthority('admin:update')")
     public ResponseEntity<String> softDeleteUser(@PathVariable Integer id) {
-
     	userService.softDeleteUser(id);
         String message = String.format("Soft delet completed successfully for user with id '%s'.", id);
         return new ResponseEntity<>(message, HttpStatus.OK);
