@@ -1,5 +1,5 @@
 <div align="center">
-<h2 align="center">CVQS Car Defect App</h2>
+<h2 align="center">CVQS Car Defect Microservice App</h2>
 </div>
 
 <!-- TABLE OF CONTENTS -->
