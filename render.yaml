@@ -1,0 +1,106 @@
+services:
+  db:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Selcuk25
+      POSTGRES_DB: 32bit
+    ports:
+      - 5432:5432
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - my-network
+
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - 8761:8761
+    networks:
+      - my-network
+
+  gateway:
+    build: ./gateway
+    ports:
+      - 8080:8080
+    environment:
+      eureka.client.service-url.defaultZone: http://eureka-server:8761/eureka
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+    depends_on:
+      - zipkin
+    networks:
+      - my-network
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - 9411:9411
+    networks:
+      - my-network
+
+  authservice:
+    build: ./auth-service
+    ports:
+      - 8081:8081
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/32bit
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Selcuk25
+      eureka.client.service-url.defaultZone: http://eureka-server:8761/eureka
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+    depends_on:
+      - db
+      - eureka-server
+      - zipkin
+    volumes:
+      - ./data:/app/resources
+    networks:
+      - my-network
+
+  cardefectservice:
+    build: ./carDefect-service
+    ports:
+      - 8082:8082
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/32bit
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Selcuk25
+      eureka.client.service-url.defaultZone: http://eureka-server:8761/eureka
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+    depends_on:
+      - db
+      - eureka-server
+      - zipkin
+    volumes:
+      - ./data:/app/resources
+    networks:
+      - my-network
+
+  userterminalmanagementservice:
+    build: ./userTerminalManagement-service
+    ports:
+      - 8083:8083
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/32bit
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Selcuk25
+      eureka.client.service-url.defaultZone: http://eureka-server:8761/eureka
+      SPRING_ZIPKIN_BASE_URL: http://zipkin:9411
+    depends_on:
+      - db
+      - eureka-server
+      - zipkin
+    volumes:
+      - ./data:/app/resources
+    networks:
+      - my-network
+
+volumes:
+  db-data:
+    driver: local
+
+networks:
+  my-network:
