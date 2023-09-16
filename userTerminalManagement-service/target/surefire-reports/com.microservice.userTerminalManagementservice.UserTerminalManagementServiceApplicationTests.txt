@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.microservice.userTerminalManagementservice.UserTerminalManagementServiceApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.046 s - in com.microservice.userTerminalManagementservice.UserTerminalManagementServiceApplicationTests
